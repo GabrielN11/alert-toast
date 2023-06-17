@@ -2,11 +2,11 @@ import React from 'react'
 import { WarningBox, Warning, WarningBar } from './styles'
 import AlertModel from '../../model/alert-model'
 
-interface AlertProps{
+export interface AlertProps{
     alerts: AlertModel[];
 }
 
-const Alert = ({alerts}: AlertProps) => {
+export const Alert = ({alerts}: AlertProps) => {
 
     if(alerts.length === 0) return null
     return (
@@ -20,5 +20,3 @@ const Alert = ({alerts}: AlertProps) => {
         </WarningBox>
     )
 }
-
-export default Alert

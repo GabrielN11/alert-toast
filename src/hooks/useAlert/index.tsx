@@ -7,7 +7,7 @@ interface useAlertModel{
     dispatchAlert: (text: string | undefined, type: EnumAlertType, duration?: number) => void;
 }
 
-const useAlert = (): useAlertModel => {
+export const useAlert = (): useAlertModel => {
     const [alerts, setAlerts] = React.useState<AlertModel[]>([])
     const timeout = React.useRef<NodeJS.Timeout>()
 
@@ -65,5 +65,3 @@ const useAlert = (): useAlertModel => {
 
     return {alerts, dispatchAlert}
 }
-
-export default useAlert
