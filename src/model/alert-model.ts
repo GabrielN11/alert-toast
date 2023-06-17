@@ -1,25 +1,20 @@
-import { EnumAlertType } from "./enum/enum-alert-type";
-
 export default class AlertModel{
 
     id: number;
     color: string;
-    duration: number;
+    duration: number = 2000;
     text: string;
-    type: EnumAlertType;
 
     constructor(
         id: number,
         color: string,
-        duration: number,
         text: string,
-        type: EnumAlertType,
+        duration?: number,
     ){
         this.id = id;
         this.color = color;
-        this.duration = duration;
         this.text = text;
-        this.type = type;
+        if(duration) this.duration = duration
 
     }
 }

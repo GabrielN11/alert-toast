@@ -1,44 +1,60 @@
 import React, { useEffect } from 'react'
-import { EnumAlertType } from '../../model/enum/enum-alert-type'
 import AlertModel from '../../model/alert-model'
 
-interface useAlertModel{
+interface useAlertModel {
     alerts: AlertModel[];
-    dispatchAlert: (text: string | undefined, type: EnumAlertType, duration?: number) => void;
+    displayAlert: (text: string,
+        type: 'success' | 'error' | 'danger',
+        duration?: number) => void;
+    displayCustomAlert: (text: string,
+        color: string,
+        duration?: number) => void;
+}
+
+class EventModel extends AlertModel{
+    custom?: boolean;
+
+    constructor(
+        text: string,
+        color: string,
+        duration?: number,
+        custom?: boolean,
+    ){
+        super(0, color, text, duration)
+        this.custom = custom;
+    }
 }
 
 export const useAlert = (): useAlertModel => {
     const [alerts, setAlerts] = React.useState<AlertModel[]>([])
     const timeout = React.useRef<NodeJS.Timeout>()
 
-    const displayAlert = React.useCallback((event: Event) => {
-        const ev = event as CustomEvent<AlertModel>
-        const {type, text, duration} = ev.detail
+    const dispatchAlert = React.useCallback((event: Event) => {
+        const ev = event as CustomEvent<EventModel>
+        const { color, text, duration, custom } = ev.detail
 
         const id = Math.random() * (1000 - 1) + 1
 
-        const pickColor = (type: EnumAlertType) => {
-            switch(type){
-                case EnumAlertType.SUCCESS:
+        const pickColor = (type: 'success' | 'error' | 'danger') => {
+            switch (type) {
+                case 'success':
                     return '#28a745'
-                case EnumAlertType.DANGER:
+                case 'error':
                     return '#cc6600'
-                case EnumAlertType.WARNING:
-                    return '#dc3545'
                 default:
-                    return '#007bff'
+                    return '#dc3545'
             }
         }
 
-        const color = pickColor(type)
+        const hexColor = custom ? color : pickColor(color as 'success' | 'error' | 'danger')
 
         const removeAlert = (list: AlertModel[]) => {
-            const newArr = list.filter((item) => item.id!== id)
+            const newArr = list.filter((item) => item.id !== id)
             return newArr
         }
 
         const addAlert = (list: AlertModel[]) => {
-            const newArr = [...list, new AlertModel(id, color, duration, text, type)]
+            const newArr = [...list, new AlertModel(id, hexColor, text, duration)]
             return newArr
         }
 
@@ -48,20 +64,30 @@ export const useAlert = (): useAlertModel => {
         }, duration)
     }, [])
 
-    const dispatchAlert = React.useCallback((text: string = 'Alerta disparado.', type: EnumAlertType, duration=5000) => {
-        dispatchEvent(new CustomEvent<AlertModel>('@displayAlert', {
-            detail: new AlertModel(0, '', duration, text, type)
+    const displayAlert = React.useCallback((text: string,
+        type: 'success' | 'error' | 'danger',
+        duration?: number) => {
+        dispatchEvent(new CustomEvent<EventModel>('@displayAlert', {
+            detail: new EventModel(text, type, duration)
+        }))
+    }, [])
+
+    const displayCustomAlert = React.useCallback((text: string,
+        color: string,
+        duration?: number) => {
+        dispatchEvent(new CustomEvent<EventModel>('@displayAlert', {
+            detail: new EventModel(text, color, duration, true)
         }))
     }, [])
 
     useEffect(() => {
-        window.addEventListener('@displayAlert', displayAlert)
+        window.addEventListener('@displayAlert', dispatchAlert)
 
         return () => {
-            window.removeEventListener('@displayAlert', displayAlert)
+            window.removeEventListener('@displayAlert', dispatchAlert)
             clearTimeout(timeout.current)
         }
     }, [])
 
-    return {alerts, dispatchAlert}
+    return { alerts, displayAlert, displayCustomAlert }
 }
