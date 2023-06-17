@@ -30,8 +30,9 @@ export const useAlert = (): useAlertModel => {
 
     const displayAlert = React.useCallback((text: string,
         type: 'success' | 'error' | 'danger',
-        duration?: number) => {
-        dispatchAlert(text, type, duration)
+        duration?: number,
+        position?: position) => {
+        dispatchAlert(text, type, duration, position)
     }, [])
 
     const displayCustomAlert = React.useCallback((text: string,

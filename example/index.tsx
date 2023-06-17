@@ -8,7 +8,7 @@ const AlertContainer = (): JSX.Element => {
   const { displayAlert, displayCustomAlert } = useAlert()
   return (
     <>
-      <button onClick={() => displayAlert('Showing Toast!', 'success', 3000)}>
+      <button onClick={() => displayAlert('Showing Toast!', 'success', 3000, 'bottom-right')}>
         Display Alert
       </button>
       <Alert defaultPosition='top-center'

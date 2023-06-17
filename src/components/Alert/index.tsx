@@ -39,7 +39,6 @@ export const Alert = (
         }
 
         const hexColor = detail.custom ? detail.color : pickColor(detail.color as 'success' | 'error' | 'danger')
-
         detail.color = hexColor
 
         if (!detail.position) {
