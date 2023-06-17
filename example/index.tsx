@@ -5,13 +5,17 @@ import {Alert} from '../src/components/Alert'
 import {useAlert} from '../src/hooks/useAlert'
 
 const AlertContainer = (): JSX.Element => {
-  const { alerts, displayAlert, displayCustomAlert } = useAlert()
+  const { displayAlert, displayCustomAlert } = useAlert()
   return (
     <>
-      <button onClick={() => displayCustomAlert('Showing Toast!', '#3240a8', 3000)}>
+      <button onClick={() => displayAlert('Showing Toast!', 'success', 3000)}>
         Display Alert
       </button>
-      <Alert alerts={alerts} />
+      <Alert defaultPosition='top-center'
+        dangerColor='#ffa726'
+        errorColor='#f44336'
+        successColor='#66bb6a'
+      />
     </>
   )
 }

@@ -1,6 +1,11 @@
 
 import styled, {keyframes} from "styled-components";
 import AnimationTimeProps from "../../model/animation-time-props";
+import { position } from "../../model/alert-model";
+
+interface WarningBoxProps{
+    position: position;
+}
 
 const timer = keyframes`
 to{
@@ -10,8 +15,11 @@ to{
 
 export const WarningBox = styled.div`
     position: fixed;
-    bottom: 50px;
-    right: 25px;
+    top: ${({position}: WarningBoxProps) => position.includes('top') ? '50px' : 'unset'};
+    bottom: ${({position}: WarningBoxProps) => position.includes('bottom') ? '50px' : 'unset'};
+    right: ${({position}: WarningBoxProps) => position.includes('right') ? '25px' : 'unset'};
+    left: ${({position}: WarningBoxProps) => position.includes('left') ? '25px' : position.includes('center') ? '50%' : 'unset'};
+    transform: ${({position}: WarningBoxProps) => position.includes('center') ? 'translateX(-50%)' : 'unset'};
     display: flex;
     flex-direction: column-reverse;
     width: fit-content;
