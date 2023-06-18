@@ -2,6 +2,8 @@
 
 Alert Toast is a simple toast library for React. I created this library for one of my projects a while ago, and since then, I have been reusing it in other projects. To make my life easier, and hopefully yours as well, I decided to create an NPM package for it.
 
+![firefox_rQOsYvPO4Q](https://github.com/GabrielN11/alert-toast/assets/42102027/80fc4fa9-0ff4-4206-9714-a87b98318035)
+
 ## Installation
 
 To install Alert Toast, run the following command:
