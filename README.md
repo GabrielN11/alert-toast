@@ -1,181 +1,99 @@
-# TSDX React w/ Storybook User Guide
+# Alert Toast
 
-Congrats! You just saved yourself hours of work by bootstrapping this project with TSDX. Let’s get you oriented with what’s here and how to use it.
+Alert Toast is a simple toast library for React. I created this library for one of my projects a while ago, and since then, I have been reusing it in other projects. To make my life easier, and hopefully yours as well, I decided to create an NPM package for it.
 
-> This TSDX setup is meant for developing React component libraries (not apps!) that can be published to NPM. If you’re looking to build a React-based app, you should use `create-react-app`, `razzle`, `nextjs`, `gatsby`, or `react-static`.
+## Installation
 
-> If you’re new to TypeScript and React, checkout [this handy cheatsheet](https://github.com/sw-yx/react-typescript-cheatsheet/)
+To install Alert Toast, run the following command:
 
-## Commands
-
-TSDX scaffolds your new library inside `/src`, and also sets up a [Parcel-based](https://parceljs.org) playground for it inside `/example`.
-
-The recommended workflow is to run TSDX in one terminal:
-
-```bash
-npm start # or yarn start
+```
+npm i alert-toast
 ```
 
-This builds to `/dist` and runs the project in watch mode so any edits you save inside `src` causes a rebuild to `/dist`.
+## Usage
 
-Then run either Storybook or the example playground:
+To use Alert Toast, import the **Alert** component and place it preferably in the main component of your application.
 
-### Storybook
+```jsx
+import { Alert } from 'alert-toast';
 
-Run inside another terminal:
-
-```bash
-yarn storybook
+<Alert/>
 ```
 
-This loads the stories from `./stories`.
+You can pass props to the **Alert** component to override default configurations. These props include colors, font color, and position of the toast. Please note that you can choose the position of the toast when invoking it. The provided position is the default position when no position is specified.
 
-> NOTE: Stories should reference the components as if using the library, similar to the example playground. This means importing from the root project directory. This has been aliased in the tsconfig and the storybook webpack config as a helper.
+```jsx
+import Alert from 'alert-toast';
 
-### Example
-
-Then run the example inside another:
-
-```bash
-cd example
-npm i # or yarn to install dependencies
-npm start # or yarn start
+<Alert
+  successColor='#388e3c'
+  dangerColor='#f57c00'
+  errorColor='#d32f2f'
+  defaultPosition='bottom-center'
+  fontColor='#ddd'
+/>
 ```
 
-The default example imports and live reloads whatever is in `/dist`, so if you are seeing an out of date component, make sure TSDX is running in watch mode like we recommend above. **No symlinking required**, we use [Parcel's aliasing](https://parceljs.org/module_resolution.html#aliases).
+To display a toast, import the **useAlert** hook in the component where you want to call it. Then, simply call the **displayAlert** function that comes with the hook.
 
-To do a one-off build, use `npm run build` or `yarn build`.
+```jsx
+import { useAlert } from 'alert-toast';
 
-To run tests, use `npm test` or `yarn test`.
+const MyComponent = () => {
+  const { displayAlert } = useAlert();
 
-## Configuration
+  useEffect(() => {
+    displayAlert('Toast message :)', 'success');
+  }, []);
 
-Code quality is set up for you with `prettier`, `husky`, and `lint-staged`. Adjust the respective fields in `package.json` accordingly.
-
-### Jest
-
-Jest tests are set up to run with `npm test` or `yarn test`.
-
-### Bundle analysis
-
-Calculates the real cost of your library using [size-limit](https://github.com/ai/size-limit) with `npm run size` and visulize it with `npm run analyze`.
-
-#### Setup Files
-
-This is the folder structure we set up for you:
-
-```txt
-/example
-  index.html
-  index.tsx       # test your component here in a demo app
-  package.json
-  tsconfig.json
-/src
-  index.tsx       # EDIT THIS
-/test
-  blah.test.tsx   # EDIT THIS
-/stories
-  Thing.stories.tsx # EDIT THIS
-/.storybook
-  main.js
-  preview.js
-.gitignore
-package.json
-README.md         # EDIT THIS
-tsconfig.json
+  // ...
+};
 ```
 
-#### React Testing Library
+### displayAlert()
 
-We do not set up `react-testing-library` for you yet, we welcome contributions and documentation on this.
+The **displayAlert()** function takes two required arguments: the message and the type. There are also optional arguments available. Here's the order of the arguments:
 
-### Rollup
+- text: string (The actual message to be displayed)
+- type: "success" | "error" | "danger" (This affects the color of the toast. There are default colors, but you can override them as mentioned above)
+- duration: number (The duration the toast will be shown, default is 2000 milliseconds)
+- position: "top-right" | "top-left" | "top-center" | "bottom-right" | "bottom-left" | "bottom-center" (The position you want the toast to appear on your page. This will override the default position)
 
-TSDX uses [Rollup](https://rollupjs.org) as a bundler and generates multiple rollup configs for various module formats and build settings. See [Optimizations](#optimizations) for details.
+Example usage:
 
-### TypeScript
-
-`tsconfig.json` is set up to interpret `dom` and `esnext` types, as well as `react` for `jsx`. Adjust according to your needs.
-
-## Continuous Integration
-
-### GitHub Actions
-
-Two actions are added by default:
-
-- `main` which installs deps w/ cache, lints, tests, and builds on all pushes against a Node and OS matrix
-- `size` which comments cost comparison of your library on every pull request using [size-limit](https://github.com/ai/size-limit)
-
-## Optimizations
-
-Please see the main `tsdx` [optimizations docs](https://github.com/palmerhq/tsdx#optimizations). In particular, know that you can take advantage of development-only optimizations:
-
-```js
-// ./types/index.d.ts
-declare var __DEV__: boolean;
-
-// inside your code...
-if (__DEV__) {
-  console.log('foo');
-}
+```jsx
+displayAlert('Toast message', 'success', 5000, 'bottom-left');
 ```
 
-You can also choose to install and use [invariant](https://github.com/palmerhq/tsdx#invariant) and [warning](https://github.com/palmerhq/tsdx#warning) functions.
+### displayCustomAlert()
 
-## Module Formats
+The **displayCustomAlert()** function is also imported with the **useAlert** hook. It works exactly like **displayAlert()**, but the key difference is that you can directly pass a hexadecimal or RGB code instead of the type to create a toast with any color you want.
 
-CJS, ESModules, and UMD module formats are supported.
+```jsx
+import { useAlert } from 'alert-toast';
 
-The appropriate paths are configured in `package.json` and `dist/index.js` accordingly. Please report if any issues are found.
+const MyComponent = () => {
+  const { displayCustomAlert } = useAlert();
 
-## Deploying the Example Playground
+  useEffect(() => {
+    displayCustomAlert('Custom toast color', '#0288d1', '5000', 'top-center');
+  }, []);
 
-The Playground is just a simple [Parcel](https://parceljs.org) app, you can deploy it anywhere you would normally deploy that. Here are some guidelines for **manually** deploying with the Netlify CLI (`npm i -g netlify-cli`):
-
-```bash
-cd example # if not already in the example folder
-npm run build # builds to dist
-netlify deploy # deploy the dist folder
+  // ...
+};
 ```
 
-Alternatively, if you already have a git repo connected, you can set up continuous deployment with Netlify:
+## How It Works
 
-```bash
-netlify init
-# build command: yarn build && cd example && yarn && yarn build
-# directory to deploy: example/dist
-# pick yes for netlify.toml
-```
+You may have noticed that there is no provider for this library. That's because I chose to use [CustomEvents](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent) to manipulate the alert state inside the **<Alert/>** component. Therefore, you should avoid using more than one Alert component simultaneously.
 
-## Named Exports
+NOTES AND ISSUES
 
-Per Palmer Group guidelines, [always use named exports.](https://github.com/palmerhq/typescript#exports) Code split inside your React app instead of your React library.
+Please note the following considerations and limitations:
 
-## Including Styles
+- If you call multiple toasts with different positions simultaneously, the position of the last toast called will override the positions of the others.
+- The library does not support passing JSX elements as messages; only strings are accepted.
+- Currently, there is no built-in "close" button for the toasts.
+- The library does not provide an option for the toast to persist indefinitely or until the user manually closes it.
 
-There are many ways to ship styles, including with CSS-in-JS. TSDX has no opinion on this, configure how you like.
-
-For vanilla CSS, you can include it at the root directory and add it to the `files` section in your `package.json`, so that it can be imported separately by your users and run through their bundler's loader.
-
-## Publishing to NPM
-
-We recommend using [np](https://github.com/sindresorhus/np).
-
-## Usage with Lerna
-
-When creating a new package with TSDX within a project set up with Lerna, you might encounter a `Cannot resolve dependency` error when trying to run the `example` project. To fix that you will need to make changes to the `package.json` file _inside the `example` directory_.
-
-The problem is that due to the nature of how dependencies are installed in Lerna projects, the aliases in the example project's `package.json` might not point to the right place, as those dependencies might have been installed in the root of your Lerna project.
-
-Change the `alias` to point to where those packages are actually installed. This depends on the directory structure of your Lerna project, so the actual path might be different from the diff below.
-
-```diff
-   "alias": {
--    "react": "../node_modules/react",
--    "react-dom": "../node_modules/react-dom"
-+    "react": "../../../node_modules/react",
-+    "react-dom": "../../../node_modules/react-dom"
-   },
-```
-
-An alternative to fixing this problem would be to remove aliases altogether and define the dependencies referenced as aliases as dev dependencies instead. [However, that might cause other problems.](https://github.com/palmerhq/tsdx/issues/64)
+I plan to improve this library whenaver i have time and energy to do it, but you can improve it and create pull requests if you want.
