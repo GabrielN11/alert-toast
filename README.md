@@ -10,6 +10,8 @@ To install Alert Toast, run the following command:
 npm i alert-toast
 ```
 
+https://www.npmjs.com/package/alert-toast
+
 ## Usage
 
 To use Alert Toast, import the **Alert** component and place it preferably in the main component of your application.
@@ -87,7 +89,7 @@ const MyComponent = () => {
 
 You may have noticed that there is no provider for this library. That's because I chose to use [CustomEvents](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent) to manipulate the alert state inside the **<Alert/>** component. Therefore, you should avoid using more than one Alert component simultaneously.
 
-NOTES AND ISSUES
+## NOTES AND ISSUES
 
 Please note the following considerations and limitations:
 
